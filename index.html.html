@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة استئذان المعلمات الطارئ (EXISTS)</title>
+    <!-- استيراد خط عربي جميل Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #ec4899;
+            --whatsapp-color: #25D366;
+            --whatsapp-hover: #1ebd59;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-radius: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            /* خلفية متعددة الألوان ومشرقة ونابضة بالحياة */
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 35%, #a1c4fd 70%, #c2e9fb 100%);
+            background-attachment: fixed;
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 550px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            animation: fadeIn 0.5s ease-in-out;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4f46e5, #db2777);
+            color: white;
+            padding: 28px 20px;
+            text-align: center;
+        }
+
+        .header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .form-body {
+            padding: 25px;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #475569;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            background-color: #f8fafc;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-whatsapp {
+            background-color: var(--whatsapp-color);
+            color: white;
+        }
+
+        .btn-whatsapp:hover {
+            background-color: var(--whatsapp-hover);
+            box-shadow: 0 6px 15px rgba(37, 211, 102, 0.35);
+            transform: translateY(-2px);
+        }
+
+        .btn-history {
+            background-color: #475569;
+            color: white;
+        }
+
+        .btn-history:hover {
+            background-color: #334155;
+            box-shadow: 0 6px 15px rgba(71, 85, 105, 0.35);
+            transform: translateY(-2px);
+        }
+
+        /* نافذة النوافذ المنبثقة (Modal) */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 550px;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            animation: zoomIn 0.3s ease;
+        }
+
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #ef4444;
+            width: auto;
+            padding: 0;
+        }
+
+        .stats-box {
+            background: linear-gradient(135deg, #e0e7ff, #fce7f3);
+            border: 1px solid #c7d2fe;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #312e81;
+            text-align: center;
+        }
+
+        .record-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .record-card span {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .password-input-wrapper {
+            margin: 15px 0;
+        }
+
+        @media (max-width: 480px) {
+            .form-body {
+                padding: 15px;
+            }
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <div class="header">
+        <h2>منصة استئذان المعلمات الطارئ (EXISTS)</h2>
+    </div>
+    
+    <div class="form-body">
+        <form id="permissionForm">
+            <div class="input-group">
+                <label for="teacherName">اسم المعلمة:</label>
+                <input type="text" id="teacherName" required placeholder="أدخلي الاسم الثلاثي">
+            </div>
+
+            <div class="input-group">
+                <label for="jobId">الرقم الوظيفي:</label>
+                <input type="text" id="jobId" required placeholder="أدخلي الرقم الوظيفي">
+            </div>
+
+            <div class="input-group">
+                <label for="leaveDate">تاريخ الاستئذان:</label>
+                <input type="date" id="leaveDate" required>
+            </div>
+
+            <div class="input-group">
+                <label for="leaveTime">ساعة الاستئذان:</label>
+                <input type="time" id="leaveTime" required>
+            </div>
+
+            <div class="input-group">
+                <label for="leaveType">نوع الاستئذان:</label>
+                <select id="leaveType" required>
+                    <option value="استئذان مؤقت طارئ">استئذان مؤقت طارئ</option>
+                    <option value="بصمة خروج طارئة">بصمة خروج طارئة</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="reason">سبب الاستئذان:</label>
+                <textarea id="reason" rows="3" required placeholder="اكتبي سبب الاستئذان الطارئ..."></textarea>
+            </div>
+
+            <div class="actions">
+                <button type="button" class="btn-whatsapp" onclick="submitAndSend()">
+                    <span>إرسال عبر الواتساب</span>
+                </button>
+                <button type="button" class="btn-history" onclick="promptPassword()">
+                    <span>سجل الطلبات</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- نافذة إدخال الرقم السري -->
+<div id="passwordModal" class="modal">
+    <div class="modal-content" style="max-width: 380px; text-align: center;">
+        <div class="modal-header" style="justify-content: center;">
+            <h3>الرقم السري مطلوب</h3>
+        </div>
+        <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">الرجاء إدخال الرقم السري للاطلاع على سجل الطلبات:</p>
+        <div class="password-input-wrapper">
+            <input type="password" id="secretPassword" placeholder="أدخل الرقم السري هنا" style="text-align: center;">
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 15px;">
+            <button type="button" onclick="verifyPassword()" style="background-color: var(--primary-color); color: white;">تحقق ودخول</button>
+            <button type="button" onclick="closePasswordModal()" style="background-color: #cbd5e1; color: #334155;">إلغاء</button>
+        </div>
+    </div>
+</div>
+
+<!-- نافذة عرض سجل الطلبات والإحصائيات -->
+<div id="historyModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>سجل الطلبات والإحصائيات</h3>
+            <button class="close-btn" onclick="closeHistoryModal()">×</button>
+        </div>
+        
+        <!-- خانة عرض الأكثر تكراراً -->
+        <div id="mostFrequentBox" class="stats-box">
+            <!-- يتم تحديثها تلقائياً -->
+        </div>
+
+        <div id="historyList">
+            <!-- يتم تعبئة السجلات هنا ديناميكياً -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // تعيين التاريخ والوقت الحالي تلقائياً عند فتح الصفحة
+    window.onload = function() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('leaveDate').value = today;
+        
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        document.getElementById('leaveTime').value = `${hours}:${minutes}`;
+    };
+
+    function submitAndSend() {
+        const name = document.getElementById('teacherName').value.trim();
+        const jobId = document.getElementById('jobId').value.trim();
+        const date = document.getElementById('leaveDate').value;
+        const time = document.getElementById('leaveTime').value;
+        const type = document.getElementById('leaveType').value;
+        const reason = document.getElementById('reason').value.trim();
+
+        if (!name || !jobId || !date || !time || !reason) {
+            alert('يرجى ملء جميع الحقول المطلوبة قبل الإرسال.');
+            return;
+        }
+
+        const requestData = {
+            id: Date.now(),
+            name: name,
+            jobId: jobId,
+            date: date,
+            time: time,
+            type: type,
+            reason: reason,
+            timestamp: new Date().toLocaleString('ar-OM')
+        };
+
+        saveToLocalStorage(requestData);
+
+        const managerPhone = "96894488050";
+        const messageText = 
+            `🚨 *نموذج طلب استئذان طارئ (EXISTS)* 🚨\n` +
+            `━━━━━━━━━━━━━━━━━━━\n` +
+            `👤 *اسم المعلمة:* ${name}\n` +
+            `🔢 *الرقم الوظيفي:* \`${jobId}\`\n` +
+            `📌 *نوع الاستئذان:* ${type}\n` +
+            `📅 *التاريخ المحدد:* ${date}\n` +
+            `⏰ *وقت الخروج:* ${time}\n` +
+            `📝 *السبب:* ${reason}\n` +
+            `━━━━━━━━━━━━━━━━━━━\n` +
+            `⏳ *وقت تقديم الطلب:* ${requestData.timestamp}`;
+
+        const encodedText = encodeURIComponent(messageText);
+        const whatsappUrl = `https://api.whatsapp.com/send?phone=${managerPhone}&text=${encodedText}`;
+
+        window.open(whatsappUrl, '_blank');
+    }
+
+    function saveToLocalStorage(data) {
+        let requests = JSON.parse(localStorage.getItem('teacherRequests')) || [];
+        requests.unshift(data);
+        localStorage.setItem('teacherRequests', JSON.stringify(requests));
+    }
+
+    // إدارة نافذة الرقم السري
+    function promptPassword() {
+        document.getElementById('secretPassword').value = '';
+        document.getElementById('passwordModal').style.display = 'flex';
+    }
+
+    function closePasswordModal() {
+        document.getElementById('passwordModal').style.display = 'none';
+    }
+
+    function verifyPassword() {
+        const pass = document.getElementById('secretPassword').value;
+        if (pass === 'moe@1234') {
+            closePasswordModal();
+            openHistoryModal();
+        } else {
+            alert('الرقم السري غير صحيح. يرجى المحاولة مرة أخرى.');
+        }
+    }
+
+    function openHistoryModal() {
+        const historyList = document.getElementById('historyList');
+        const mostFrequentBox = document.getElementById('mostFrequentBox');
+        historyList.innerHTML = '';
+        
+        let requests = JSON.parse(localStorage.getItem('teacherRequests')) || [];
+
+        if (requests.length === 0) {
+            mostFrequentBox.style.display = 'none';
+            historyList.innerHTML = '<p style="text-align: center; color: #64748b; padding: 20px;">لا توجد طلبات محفوظة حتى الآن.</p>';
+        } else {
+            // حساب الأكثر تكراراً بناءً على الرقم الوظيفي والاسم
+            let counts = {};
+            let namesMap = {};
+            requests.forEach(req => {
+                counts[req.jobId] = (counts[req.jobId] || 0) + 1;
+                namesMap[req.jobId] = req.name;
+            });
+
+            let topJobId = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
+            let topCount = counts[topJobId];
+            let topName = namesMap[topJobId];
+
+            mostFrequentBox.style.display = 'block';
+            mostFrequentBox.innerHTML = `📊 الأكثر طلباً: <b>${topName}</b> (الرقم الوظيفي: ${topJobId}) بعدد <b>${topCount}</b> طلبات`;
+
+            requests.forEach(req => {
+                const card = document.createElement('div');
+                card.className = 'record-card';
+                card.innerHTML = `
+                    <p><span>المعلمة:</span> ${req.name} (${req.jobId})</p>
+                    <p><span>النوع:</span> ${req.type} | <span>التاريخ:</span> ${req.date} (${req.time})</p>
+                    <p><span>السبب:</span> ${req.reason}</p>
+                    <p style="font-size: 11px; color: #64748b; margin-top: 5px;">وقت التسجيل: ${req.timestamp}</p>
+                `;
+                historyList.appendChild(card);
+            });
+        }
+
+        document.getElementById('historyModal').style.display = 'flex';
+    }
+
+    function closeHistoryModal() {
+        document.getElementById('historyModal').style.display = 'none';
+    }
+
+    // إغلاق النوافذ عند النقر خارجها
+    window.onclick = function(event) {
+        const modalHist = document.getElementById('historyModal');
+        const modalPass = document.getElementById('passwordModal');
+        if (event.target == modalHist) {
+            modalHist.style.display = "none";
+        }
+        if (event.target == modalPass) {
+            modalPass.style.display = "none";
+        }
+    }
+</script>
+
+</body>
+</html>
